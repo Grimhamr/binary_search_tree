@@ -60,20 +60,27 @@ end
 class Tree
     #@build_tree = build_tree [1, 7, 4, 23, 8, =>9, 3, 5, 67, 6345, 324]
     def initialize(array)
-
+        @array = array
     end 
 
     def create_children(node,array)
+        backup_array = array
         i=1
         pretty_print
         p "checking if #{array} is nil"
         if array.nil? #|| array[@position_left].nil? || array[@position_right].nil?
              p "nil found in array"
             return
+        elsif array.length==1
+            node.left = Node.new(array[0])
+            puts "end of branch"
+            return
         end
-        p "makin children for #{node.data}, from array #{array}"
+
+
+        p "makin children for #{node.data}"
             @position_left = array.length/2 - i
-            @position_right = array.length/2 + i
+            @position_right = array.length/2 
        
         if array[@position_left] > array[@position_right]
             node.left = Node.new(array[@position_right])
@@ -82,20 +89,30 @@ class Tree
             node.left = Node.new(array[@position_left])
             node.right = Node.new(array[@position_right])
         end
-        p "array before deletes: #{array}." 
-        puts "deleting #{array[@position_left]}, #{array[@position_right]}, #{array[array.length/2]}"
+        
+        puts "deleting #{array[@position_left]},  #{array[@position_right]}"
         array.delete_at(@position_right)
-        array.delete_at(array.length/2)
+        #central delete causes issues after first iteration
+        #array.delete_at(array.length/2)
         array.delete_at(@position_left)
         
         p "array after: #{array}"
         p "node data: #{node.data} and node created: "
         p node
        # i +=1
-        p "creating left node"
-        create_children(node.left, array.slice(0,@position_left))
-        p "creating right node"
-        create_children(node.right, array.slice(array[@position_right],array[-1]))
+        print "creating children for left node, which is: "
+        p node.left
+        left_array = array.slice(0,@position_left)
+        create_children(node.left, left_array )
+        if array[@position_right].nil?
+            puts "nil found"
+            return
+        end
+        right_array = array.slice(array[@position_right],array[-1])
+        
+        p "@@@@@@@@@@@@@@@@@@@@@@boutta build right node. array is #{array}"
+        p "creating right node from #{right_array}"
+        create_children(node.right, right_array)
 
     end
 
@@ -117,7 +134,7 @@ class Tree
             
                 p "root is #{array[array.length/2]}"
             
-
+                array.delete_at(array.length/2)
 
                 create_children(@root,array)
                 
