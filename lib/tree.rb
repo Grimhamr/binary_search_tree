@@ -75,8 +75,19 @@ class Tree
             node.left = Node.new(array[0])
             puts "end of branch"
             return
+        elsif array.length == 2
+            puts "array has only 2 elements. setting them as nodes"
+            if array[0] > array[1]
+                node.left = Node.new(array[1])
+                node.right = Node.new(array[0])
+            else 
+                node.left = Node.new(array[0])
+                node.right = Node.new(array[1])
+            end
+             
+        
         end
-
+        puts "#{array} not nil. proceeding"
 
         p "makin children for #{node.data}"
             @position_left = array.length/2 - i
@@ -102,8 +113,21 @@ class Tree
        # i +=1
         print "creating children for left node, which is: "
         p node.left
-        left_array = array.slice(0,@position_left)
+        if array.length == 2
+            puts "array has only 2 elements. setting them as nodes"
+            if array[0] > array[1]
+                node.left.left = Node.new(array[1])
+                node.left.right = Node.new(array[0])
+            else 
+                node.left.left = Node.new(array[0])
+                node.left.right = Node.new(array[1])
+            end
+             
+        else
+            left_array = array.slice(0,@position_left)
+        end
         create_children(node.left, left_array )
+        
         if array[@position_right].nil?
             puts "nil found"
             return
