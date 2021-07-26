@@ -64,11 +64,10 @@ class Tree
     end 
 
     def create_children(node,array)
-        backup_array = array
-        i=1
+        
         pretty_print
-        p "checking if #{array} is nil"
-        if array.nil? #|| array[@position_left].nil? || array[@position_right].nil?
+        p "checking array"
+        if array.nil? 
              p "nil found in array"
             return
         elsif array.length==1
@@ -76,7 +75,6 @@ class Tree
             puts "end of branch"
             return
         elsif array.length == 2
-            puts "array has only 2 elements. setting them as nodes"
             if array[0] > array[1]
                 node.left = Node.new(array[1])
                 node.right = Node.new(array[0])
@@ -89,8 +87,8 @@ class Tree
         end
         puts "#{array} not nil. proceeding"
 
-        p "makin children for #{node.data}"
-            @position_left = array.length/2 - i
+        p "generating children nodes for #{node.data}"
+            @position_left = array.length/2 - 1
             @position_right = array.length/2 
        
         if array[@position_left] > array[@position_right]
@@ -101,18 +99,12 @@ class Tree
             node.right = Node.new(array[@position_right])
         end
         
-        puts "deleting #{array[@position_left]},  #{array[@position_right]}"
+
         array.delete_at(@position_right)
-        #central delete causes issues after first iteration
-        #array.delete_at(array.length/2)
+
         array.delete_at(@position_left)
         
-        p "array after: #{array}"
-        p "node data: #{node.data} and node created: "
-        p node
-       # i +=1
-        print "creating children for left node, which is: "
-        p node.left
+
         if array.length == 2
             puts "array has only 2 elements. setting them as nodes"
             if array[0] > array[1]
@@ -125,17 +117,16 @@ class Tree
              
         else
             left_array = array.slice(0,@position_left)
+
         end
+
         create_children(node.left, left_array )
         
         if array[@position_right].nil?
-            puts "nil found"
             return
         end
         right_array = array.slice(array[@position_right],array[-1])
         
-        p "@@@@@@@@@@@@@@@@@@@@@@boutta build right node. array is #{array}"
-        p "creating right node from #{right_array}"
         create_children(node.right, right_array)
 
     end
@@ -145,14 +136,12 @@ class Tree
             puts "array empty. returning"
             return
         end
-        print "buildin tree. array:"
+        print "building tree from array:"
         array = array.uniq
         p array
 
-      i = 1
-
-            @position_left = array.length/2 - i
-            @position_right = array.length/2 + i
+            @position_left = array.length/2 - 1
+            @position_right = array.length/2 + 1
             
             @root = Node.new(array[array.length/2])
             
@@ -163,8 +152,8 @@ class Tree
                 create_children(@root,array)
                 
 
-                    
-                    puts "cycle complete. "
+       @root             
+            
          
     end
 
