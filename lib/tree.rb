@@ -62,12 +62,15 @@ class Tree
     def initialize(array)
         array = array.uniq
         build_tree(array)
+        
     end 
 
     def create_children(node,array)
         
-        pretty_print
-        p "checking array"
+        
+        
+        puts "array integrity check to generate children nodes for #{node.data}"
+        p "checking array #{array}"
         if array.nil?  || array.empty?
             p array
              p "nil found in array"
@@ -78,6 +81,7 @@ class Tree
             puts "end of branch"
             return
         elsif array.length == 2
+            puts "array contains two elements. making them nodes"
             if array[0] > array[1]
                 node.left = Node.new(array[1])
                 node.right = Node.new(array[0])
@@ -94,42 +98,28 @@ class Tree
            @position_left = array.length/2 - 1
             @position_right = array.length/2 
        
-        if array[@position_left] > array[@position_right]
-            node.left = Node.new(array[@position_right])
-            node.right = Node.new(array[@position_left])
+        if array[array.length/2 - 1] > array[array.length/2 ]
+            node.left = Node.new(array[array.length/2 ])
+            node.right = Node.new(array[array.length/2 - 1])
         else 
-            node.left = Node.new(array[@position_left])
-            node.right = Node.new(array[@position_right])
+            node.left = Node.new(array[array.length/2 - 1])
+            node.right = Node.new(array[array.length/2 ])
         end
         
+        p "built #{node.left.data} and #{node.right.data}.proceeding to delete them"
+        array.delete(node.left.data)
 
-        array.delete_at(@position_right)
-
-        array.delete_at(@position_left)
+        array.delete(node.right.data)
+        puts "array now #{array}"
         
-
-        left_array = array.slice(0,@position_left)
-
-        
-
-     
-        
-
-        p "left array deployed from #{array}. #{left_array}"
-        create_children(node.left, left_array )
-        
-       
-        if array[@position_right].nil?
-            return
-        end
-        right_array = array.slice(array[@position_right],array[-1])
-        create_children(node.right, right_array)
+        create_children(node.left, array[0..array.length/2])
+        create_children(node.right, array[array.length/2+1..-1])
 
     end
 
     def build_tree(array)
         if array.nil? || array.length==0
-            puts "array empty. returning"
+            puts "array empty."
             return
         end
         print "building tree from array:"
@@ -148,10 +138,7 @@ class Tree
                     @position_left = array.length/2 -1
                     @position_right = array.length/2 
             
-                    left_array = array.slice(0,array[@position_left])
-                    right_array = array.slice(array[@position_left], array[-1])
-                    
-                    p "left #{left_array} vs right_array #{right_array} after root deletion"
+                
                 create_children(@root,array)
                 
 
@@ -167,8 +154,8 @@ class Tree
       end
 
 end
-tree = Tree.new([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])
-#tree = Tree.new([9,1,4,7,8,6,5,3,2,4,6,7,10,13,14,12,11])
+#tree = Tree.new([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
+tree = Tree.new([9,1,4,7,8,6,5,3,2,4,6,7,10,13,14,12,11])
 p "final:"
 tree.pretty_print
 
