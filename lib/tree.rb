@@ -5,7 +5,9 @@ As a bonus, try including the Comparable module and compare nodes using their da
 Build a Tree class which accepts an array when initialized. The Tree class should have a root attribute which uses the return 
 value of #build_tree which you’ll write next.
 
-
+Write a #build_tree method which takes an array of data (e.g. [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) 
+and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). 
+The #build_tree method should return the level-0 root node.
 
 Write an #insert and #delete method which accepts a value to insert/delete (you’ll have to deal with several cases for delete 
 such as when a node has children or not). If you need additional resources, check out these two articles on inserting and deleting, 
@@ -44,107 +46,40 @@ Confirm that the tree is balanced by calling #balanced?
 Print out all elements in level, pre, post, and in order
 
 =end
-
 class Node
-    include Comparable
-    attr_accessor :left, :right, :data
+    attr_accessor :data, :left, :right
 
     def initialize(data)
-        
-        @data = data
-        @left = nil
-        @right = nil
+    @data = data
+    @left = nil
+    @right = nil
     end
+
 end
 
 class Tree
-    #@build_tree = build_tree [1, 7, 4, 23, 8, =>9, 3, 5, 67, 6345, 324]
+
     def initialize(array)
-        array = array.uniq
-        build_tree(array)
-        
-    end 
-
-    def create_children(node,array)
-        
-        
-        
-        puts "array integrity check to generate children nodes for #{node.data}"
-        p "checking array #{array}"
-        if array.nil?  || array.empty?
-            p array
-             p "nil found in array"
-             
-            return
-        elsif array.length==1
-            node.left = Node.new(array[0])
-            puts "end of branch"
-            return
-        elsif array.length == 2
-            puts "array contains two elements. making them nodes"
-            if array[0] > array[1]
-                node.left = Node.new(array[1])
-                node.right = Node.new(array[0])
-            else 
-                node.left = Node.new(array[0])
-                node.right = Node.new(array[1])
-            end
-             
-        
-        end
-        puts "#{array} not nil. proceeding"
-
-        p "generating children nodes for #{node.data}"
-           @position_left = array.length/2 - 1
-            @position_right = array.length/2 
-       
-        if array[array.length/2 - 1] > array[array.length/2 ]
-            node.left = Node.new(array[array.length/2 ])
-            node.right = Node.new(array[array.length/2 - 1])
-        else 
-            node.left = Node.new(array[array.length/2 - 1])
-            node.right = Node.new(array[array.length/2 ])
-        end
-        
-        p "built #{node.left.data} and #{node.right.data}.proceeding to delete them"
-        array.delete(node.left.data)
-
-        array.delete(node.right.data)
-        puts "array now #{array}"
-        
-        create_children(node.left, array[0..array.length/2])
-        create_children(node.right, array[array.length/2+1..-1])
-
+        array = array.sort.uniq
+        @root = build_tree(array)
     end
 
     def build_tree(array)
-        if array.nil? || array.length==0
-            puts "array empty."
-            return
-        end
-        print "building tree from array:"
-        array = array.uniq
-        puts array.length
-        p array
+        
+        return nil if array.empty?
 
-          
-            @root = Node.new(array[array.length/2])
-            
-                p "root is #{array[array.length/2]}"
-            
-                array.delete_at(array.length/2)
+        middle = (array.length - 1) / 2
+        root_node = Node.new(array[middle])
+        
+        root_node.left = build_tree(array[0...middle])
+        root_node.right = build_tree(array[(middle + 1)..-1])
+    
+        
+        
 
-                
-                    @position_left = array.length/2 -1
-                    @position_right = array.length/2 
-            
-                
-                create_children(@root,array)
-                
-
-       @root             
-            
-         
+        #returns level0 root node
+        p root_node
+        root_node
     end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
@@ -155,8 +90,10 @@ class Tree
 
 end
 #tree = Tree.new([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
-tree = Tree.new([9,1,4,7,8,6,5,3,2,4,6,7,10,13,14,12,11])
-p "final:"
+
+array= Array.new(17) { rand(1...100) }
+tree = Tree.new(array)
+
 tree.pretty_print
 
 
