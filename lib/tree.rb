@@ -1,17 +1,4 @@
 =begin
-Build a Node class. It should have an attribute for the data it stores as well as its left and right children. 
-As a bonus, try including the Comparable module and compare nodes using their data attribute.
-
-Build a Tree class which accepts an array when initialized. The Tree class should have a root attribute which uses the return 
-value of #build_tree which you’ll write next.
-
-Write a #build_tree method which takes an array of data (e.g. [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]) 
-and turns it into a balanced binary tree full of Node objects appropriately placed (don’t forget to sort and remove duplicates!). 
-The #build_tree method should return the level-0 root node.
-
-Write an #insert and #delete method which accepts a value to insert/delete (you’ll have to deal with several cases for delete 
-such as when a node has children or not). If you need additional resources, check out these two articles on inserting and deleting, 
-or this video with several visual examples.
 
 Write a #find method which accepts a value and returns the node with the given value.
 
@@ -58,7 +45,7 @@ class Node
 end
 
 class Tree
-
+    attr_accessor :root, :root_node
     def initialize(array)
         array = array.sort.uniq
         @root = build_tree(array)
@@ -78,8 +65,51 @@ class Tree
         
 
         #returns level0 root node
-        p root_node
+  
         root_node
+    end
+
+    #Write an #insert and #delete method which accepts a value to insert/delete (you’ll have to deal with several cases for delete 
+    #   such as when a node has children or not). If you need additional resources, check out these two articles on inserting and deleting, 
+    #or this video with several visual examples.
+
+    def check_duplicate(data, node = root)
+        return if node.nil?
+        if node.data == data
+            puts "#{data} instance located. insertion invalid"
+            @insertion_valid = false
+            return
+        else 
+            #puts "#{node.data} not found to be #{data}"
+            check_duplicate(data, node.left)
+            check_duplicate(data, node.right)
+        end
+    end
+
+    def find_insert_node(data, node = root)
+        return if node.nil?
+        if node.data < data
+            if node.right.nil? && !(node.left.nil?)
+                node.right = Node.new(data)
+            elsif node.right.nil? && node.left.nil?
+                node.right = Node.new(data)
+            else
+                find_insert_node(data, node.left)
+            end
+        else
+            find_insert_node(data,node.left)
+        end
+    end
+
+    def insert(data)
+        #check if tree has data already
+        @insertion_valid = true
+        check_duplicate(data)
+
+        if @insertion_valid == true
+            puts "insertion valid"
+            find_insert_node(data)
+        end
     end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
@@ -89,12 +119,17 @@ class Tree
       end
 
 end
-#tree = Tree.new([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
 
-array= Array.new(17) { rand(1...100) }
+array= Array.new(25) { rand(1...100) }
 tree = Tree.new(array)
 
 tree.pretty_print
+
+
+tree.insert(13)
+
+tree.pretty_print
+
 
 
 
