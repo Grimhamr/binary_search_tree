@@ -73,16 +73,16 @@ class Tree
     #   such as when a node has children or not). If you need additional resources, check out these two articles on inserting and deleting, 
     #or this video with several visual examples.
 
-    def check_duplicate(data, node = root)
+    def find_instance(data, node = root)
         return if node.nil?
         if node.data == data
-            puts "#{data} instance located. insertion invalid"
+            puts "#{data} instance located. insertion invalid, deletion valid"
             @insertion_valid = false
-            return
+            @found_instance = node
+           
         else 
-            #puts "#{node.data} not found to be #{data}"
-            check_duplicate(data, node.left)
-            check_duplicate(data, node.right)
+            find_instance(data, node.left)
+            find_instance(data, node.right)
         end
     end
 
@@ -91,26 +91,56 @@ class Tree
         if node.data < data
             if node.right.nil? && !(node.left.nil?)
                 node.right = Node.new(data)
+                puts "#{data} inserted in node:"
+                p node
             elsif node.right.nil? && node.left.nil?
                 node.right = Node.new(data)
+                puts "#{data} inserted in node:"
+                p node
+            elsif !(node.right.nil?) && node.left.nil?
+                if data < node.right.data
+                    node.left = Node.new(data) 
+                else    
+                    find_insert_node(data, node.right)
+                end
             else
-                find_insert_node(data, node.left)
+                find_insert_node(data, node.right)
             end
         else
-            find_insert_node(data,node.left)
+            if node.left == nil
+                node.left = Node.new(data) 
+            else
+                find_insert_node(data,node.left)
+            end
         end
     end
 
     def insert(data)
-        #check if tree has data already
+
         @insertion_valid = true
-        check_duplicate(data)
+        find_instance(data)
 
         if @insertion_valid == true
             puts "insertion valid"
             find_insert_node(data)
         end
     end
+
+    def delete(data, node = root)
+       
+        node=find_instance(data)
+
+        puts "node to delete is"
+        p @found_instance.data
+            return if node.nil?
+            if node.data == @found_instance.data
+                node = nil
+                return
+            else
+                delete(data, node.left)
+                delete(data, node.right)
+            end
+        end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
@@ -126,7 +156,21 @@ tree = Tree.new(array)
 tree.pretty_print
 
 
-tree.insert(13)
+tree.insert(101)
+tree.pretty_print
+tree.insert(1010)
+tree.pretty_print
+tree.insert(1051)
+tree.pretty_print
+tree.insert(1017)
+tree.insert(4)
+tree.insert(15)
+tree.insert(3)
+tree.insert(568)
+
+tree.pretty_print
+
+tree.delete(13)
 
 tree.pretty_print
 
