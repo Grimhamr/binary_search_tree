@@ -76,7 +76,7 @@ class Tree
     def find_instance(data, node = root)
         return if node.nil?
         if node.data == data
-            puts "#{data} instance located. insertion invalid, deletion valid"
+            #puts "#{data} instance located. insertion invalid, deletion valid"
             @insertion_valid = false
             @found_instance = node
            
@@ -98,7 +98,7 @@ class Tree
                 puts "#{data} inserted in node:"
                 p node
             elsif !(node.right.nil?) && node.left.nil?
-                if data < node.right.data
+                if data < node.right.data && data < node.data
                     node.left = Node.new(data) 
                 else    
                     find_insert_node(data, node.right)
@@ -121,25 +121,46 @@ class Tree
         find_instance(data)
 
         if @insertion_valid == true
-            puts "insertion valid"
+            puts "insertion valid. inserting #{data}"
             find_insert_node(data)
         end
     end
 
     def delete(data, node = root)
-       
-        node=find_instance(data)
-
-        puts "node to delete is"
-        p @found_instance.data
-            return if node.nil?
-            if node.data == @found_instance.data
-                node = nil
-                return
-            else
-                delete(data, node.left)
-                delete(data, node.right)
+        
+        find_instance(data)
+        unless node.nil?
+        unless node.left.nil?
+            puts "checking left at #{node.data}"
+            if !(node.left.data.nil?)  
+                puts "left is #{node.left.data}" 
+                #puts "comparing #{node.left.data} with #{@found_instance.data}"
+                if node.left.data == @found_instance.data 
+                    puts "LOCATED!!!!@!@!@!@!@!@!@!deleting: #{node.left.data}"
+                    node.left=nil
+                end
             end
+        end
+        unless node.right.nil?
+            if !(node.right.data.nil?)
+                puts "checking right at #{node.data}"
+                unless node.right.data.nil?
+                    puts "right is #{node.right.data}"
+                if node.right.data == @found_instance.data
+                    puts "deleting: #{node.right.data}"
+                    node.right = nil
+                end
+            end
+            else
+               
+            end
+            
+        end
+    
+    delete(data, node.left)
+    delete(data, node.right)
+    end
+   
         end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
@@ -156,21 +177,15 @@ tree = Tree.new(array)
 tree.pretty_print
 
 
-tree.insert(101)
+tree.insert(88)
+
 tree.pretty_print
-tree.insert(1010)
-tree.pretty_print
-tree.insert(1051)
-tree.pretty_print
-tree.insert(1017)
-tree.insert(4)
-tree.insert(15)
-tree.insert(3)
-tree.insert(568)
+puts "deleting"
+tree.delete(88)
 
 tree.pretty_print
 
-tree.delete(13)
+tree.insert(88)
 
 tree.pretty_print
 
