@@ -1,6 +1,5 @@
 =begin
 
-Write a #find method which accepts a value and returns the node with the given value.
 
 Write a #level_order method that returns an array of values. This method should traverse the tree in breadth-first level order. 
 This method can be implemented using either iteration or recursion (try implementing both!). Tip: You will want to use an array acting 
@@ -73,7 +72,7 @@ class Tree
     #   such as when a node has children or not). If you need additional resources, check out these two articles on inserting and deleting, 
     #or this video with several visual examples.
 
-    def find_instance(data, node = root)
+    def find(data, node = root)
         return if node.nil?
         if node.data == data
             #puts "#{data} instance located. insertion invalid, deletion valid"
@@ -81,8 +80,11 @@ class Tree
             @found_instance = node
            
         else 
-            find_instance(data, node.left)
-            find_instance(data, node.right)
+            find(data, node.left)
+            find(data, node.right)
+        end
+        unless @found_instance == nil
+            return @found_instance if @found_instance.data == data
         end
     end
 
@@ -118,7 +120,7 @@ class Tree
     def insert(data)
 
         @insertion_valid = true
-        find_instance(data)
+        find(data)
 
         if @insertion_valid == true
             puts "insertion valid. inserting #{data}"
@@ -128,40 +130,38 @@ class Tree
 
     def delete(data, node = root)
         
-        find_instance(data)
+        find(data)
         unless node.nil?
-        unless node.left.nil?
-            puts "checking left at #{node.data}"
-            if !(node.left.data.nil?)  
-                puts "left is #{node.left.data}" 
-                #puts "comparing #{node.left.data} with #{@found_instance.data}"
-                if node.left.data == @found_instance.data 
-                    puts "LOCATED!!!!@!@!@!@!@!@!@!deleting: #{node.left.data}"
-                    node.left=nil
+            unless node.left.nil?
+                puts "checking left at #{node.data}"
+                    if !(node.left.data.nil?)  
+                            puts "left is #{node.left.data}" 
+                            #puts "comparing #{node.left.data} with #{@found_instance.data}"
+                            if node.left.data == @found_instance.data 
+                               puts "LOCATED!!!!@!@!@!@!@!@!@!deleting: #{node.left.data}"
+                               node.left=nil
+                            end
+                    end
+            end
+            unless node.right.nil?
+                if !(node.right.data.nil?)
+                    puts "checking right at #{node.data}"
+                    unless node.right.data.nil?
+                        puts "right is #{node.right.data}"
+                        if node.right.data == @found_instance.data
+                            puts "deleting: #{node.right.data}"
+                            node.right = nil
+                        end
+                    end
                 end
             end
-        end
-        unless node.right.nil?
-            if !(node.right.data.nil?)
-                puts "checking right at #{node.data}"
-                unless node.right.data.nil?
-                    puts "right is #{node.right.data}"
-                if node.right.data == @found_instance.data
-                    puts "deleting: #{node.right.data}"
-                    node.right = nil
-                end
-            end
-            else
-               
-            end
-            
-        end
     
-    delete(data, node.left)
-    delete(data, node.right)
-    end
-   
+            delete(data, node.left)
+            delete(data, node.right)
         end
+    end
+
+
 
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
@@ -175,7 +175,7 @@ array= Array.new(25) { rand(1...100) }
 tree = Tree.new(array)
 
 tree.pretty_print
-
+tree.insert(13)
 
 tree.insert(88)
 
@@ -188,6 +188,11 @@ tree.pretty_print
 tree.insert(88)
 
 tree.pretty_print
+
+
+p tree.find(13)
+
+p tree.find(24)
 
 
 
