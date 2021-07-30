@@ -1,18 +1,4 @@
-=begin
 
-Tie it all together
-Write a simple driver script that does the following:
-
-Create a binary search tree from an array of random numbers (Array.new(15) { rand(1..100) })
-Confirm that the tree is balanced by calling #balanced?
-Print out all elements in level, pre, post, and in order
-Unbalance the tree by adding several numbers > 100
-Confirm that the tree is unbalanced by calling #balanced?
-Balance the tree by calling #rebalance
-Confirm that the tree is balanced by calling #balanced?
-Print out all elements in level, pre, post, and in order
-
-=end
 class Node
     attr_accessor :data, :left, :right
 
@@ -40,12 +26,7 @@ class Tree
         
         root_node.left = build_tree(array[0...middle])
         root_node.right = build_tree(array[(middle + 1)..-1])
-    
-        
-        
 
-        #returns level0 root node
-  
         root_node
     end
 
@@ -248,7 +229,6 @@ class Tree
        return true if node.nil?
         left_node_height = height(node.left)
         right_node_height = height(node.right)
-
         return true if (left_node_height - right_node_height).abs <=1 && balanced?(node.left) && balanced?(node.right)
 
         false
@@ -270,11 +250,11 @@ class Tree
             i += 1
             rebalance(i, array)
         else
-            balanced_tree = Tree.new(array.flatten)
+            tree = Tree.new(array.flatten)
         end
     end
 end
-
+=begin
 array= Array.new(25) { rand(1...100) }
 tree = Tree.new(array)
 
@@ -326,29 +306,7 @@ puts tree.balanced?
 puts "Rebalanced tree:"
 puts tree.rebalance.pretty_print
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+=end
 
 
 
