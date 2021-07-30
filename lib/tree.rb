@@ -1,14 +1,6 @@
 =begin
 
 
-
-
-Write #inorder, #preorder, and #postorder methods that returns an array of values. Each method should traverse the tree 
-in their respective depth-first order.
-
-Write a #height method which accepts a node and returns its height. Height is defined as the number of edges in 
-longest path from a given node to a leaf node.
-
 Write a #depth method which accepts a node and returns its depth. Depth is defined as the number of edges in path from a given node to the tree’s root node.
 
 Write a #balanced? method which checks if the tree is balanced. A balanced tree is one where the difference 
@@ -178,6 +170,105 @@ class Tree
         return @levels_hash[order]
     end
 
+            #Write #inorder, #preorder, and #postorder methods that returns an array of values. Each method should traverse the tree 
+        #in their respective depth-first order.
+
+    def inorder(node = root)
+        #left, visit, right
+        @inorder_array ||= []
+
+        unless node.left.nil?
+            inorder(node.left)
+        end
+
+        @inorder_array.push(node.data)
+        unless node.right.nil?
+            inorder(node.right)
+        end
+
+        @inorder_array
+    end
+    
+    def preorder(node = root)
+        #visit, left, right
+        @preorder_array ||= []
+        @preorder_array.push(node.data)
+        unless node.left.nil?
+            preorder(node.left)
+        end
+        
+        unless node.right.nil?
+            preorder(node.right)
+        end
+
+        @preorder_array
+    end
+    
+    def postorder(node = root)
+        #left, right, visit
+        @postorder_array ||= []
+     
+        unless node.left.nil?
+            postorder(node.left)
+        end
+         unless node.right.nil?
+            postorder(node.right)
+        end
+        @postorder_array.push(node.data)
+
+        @postorder_array
+    end
+
+    #Write a #height method which accepts a node and returns its height. Height is defined as the number of edges in 
+    #longest path from a given node to a leaf node.
+
+    def height(data,node = root)
+        
+        @node_heights.clear unless @node_heights.nil?
+        #check if node.data == data
+        unless node.nil?
+            if node.data != data
+                height(data, node.left)
+                height(data, node.right)
+                #if not, re-run on node.left and node.right
+            else
+                
+                height_measure(node)
+                
+                
+                height = @node_heights.sum
+                p "height of #{data} is: #{height}"
+                return @node_heights.sum
+                
+            end
+            
+        end
+        
+    end
+    private
+    def height_measure(node, node_height = 0)
+    @node_heights ||=[]
+        if node.left.nil? 
+            if node.right.nil?
+               # p "found end. returning height of #{node_height}"
+                @node_heights.push(node_height)
+                #return node_height
+            else
+                node_height += 1
+                height_measure(node.right,node_height)
+            end
+        else
+            node_height +=1
+            height_measure(node.left,node_height)
+        end
+        if node.right.nil? && !(node.left.nil?)
+            height_measure(node.left,node_height)
+        end
+        
+        #p "node heights are:"
+        #p @node_heights
+    end
+    public
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
         puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -211,6 +302,30 @@ p tree.find(24)
 puts "level order"
 puts tree.level_order(3)
 
+puts "inorder"
+p tree.inorder
+
+puts "preorder"
+p tree.preorder
+
+puts "postorder"
+p tree.postorder
+
+
+puts tree.height(13)
+
+puts tree.height(50)
+
+puts tree.height(24)
+
+
+puts tree.height(27)
+
+
+puts tree.height(31)
+
+
+puts tree.height(65)
 
 
 
