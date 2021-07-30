@@ -150,7 +150,13 @@ class Tree
     #Write a #level_order method that returns an array of values. This method should traverse the tree in breadth-first level order. 
     #This method can be implemented using either iteration or recursion (try implementing both!). Tip: You will want to use an array acting 
     #as a queue to keep track of all the child nodes that you have yet to traverse and to add new ones to the list (as you saw in the video).
-    def level_order(order, node = root,  i = 0)
+    def level_order(order)
+        level = level_order_find(order)
+        #reset hash
+        @levels_hash = nil
+        return level
+    end
+    def level_order_find(order, node = root,  i = 0)
         #create hash with arrays of the  levels in it
         @levels_hash ||= Hash.new
         #create array of level if it doesn't exist
@@ -162,8 +168,8 @@ class Tree
                 @levels_hash[i].push(node.data)
                 #increase counter
                 i = i + 1
-                level_order(order,node.left,i)
-                level_order(order,node.right,i)
+                level_order_find(order,node.left,i)
+                level_order_find(order,node.right,i)
             end
         end
 
@@ -222,53 +228,25 @@ class Tree
     #Write a #height method which accepts a node and returns its height. Height is defined as the number of edges in 
     #longest path from a given node to a leaf node.
 
-    def height(data,node = root)
-        
-        @node_heights.clear unless @node_heights.nil?
-        #check if node.data == data
-        unless node.nil?
-            if node.data != data
-                height(data, node.left)
-                height(data, node.right)
-                #if not, re-run on node.left and node.right
-            else
-                
-                height_measure(node)
-                
-                
-                height = @node_heights.sum
-                p "height of #{data} is: #{height}"
-                return @node_heights.sum
-                
-            end
-            
+    def height(node = root)
+        unless node.nil? || node == root
+          node = (node.instance_of?(Node) ? find(node.data) : find(node))
         end
-        
+    
+        return -1 if node.nil?
+    
+        [height(node.left), height(node.right)].max + 1
     end
-    private
-    def height_measure(node, node_height = 0)
-    @node_heights ||=[]
-        if node.left.nil? 
-            if node.right.nil?
-               # p "found end. returning height of #{node_height}"
-                @node_heights.push(node_height)
-                #return node_height
-            else
-                node_height += 1
-                height_measure(node.right,node_height)
-            end
-        else
-            node_height +=1
-            height_measure(node.left,node_height)
-        end
-        if node.right.nil? && !(node.left.nil?)
-            height_measure(node.left,node_height)
-        end
+    
+    def depth(node)
+        #find node
+            node = find(node)
+        #
         
-        #p "node heights are:"
-        #p @node_heights
+
+
     end
-    public
+
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
         puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -300,7 +278,7 @@ p tree.find(13)
 
 p tree.find(24)
 puts "level order"
-puts tree.level_order(3)
+p tree.level_order(3)
 
 puts "inorder"
 p tree.inorder
@@ -326,6 +304,9 @@ puts tree.height(31)
 
 
 puts tree.height(65)
+
+puts tree.depth(13)
+
 
 
 
