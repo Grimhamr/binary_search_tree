@@ -260,10 +260,18 @@ class Tree
         pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
     end
 
-    def rebalance
+    def rebalance(i=0,array = [])
         #Write a #rebalance method which rebalances an unbalanced tree. Tip: You’ll want to create a level-order array 
         #of the tree before passing the array back into the #build_tree method.
         
+        #get level order of i; i+=1 until level order.compact.empty?
+        array.push(level_order(i))
+        unless level_order(i).compact.empty?
+            i += 1
+            rebalance(i, array)
+        else
+            balanced_tree = Tree.new(array.flatten)
+        end
     end
 end
 
@@ -315,8 +323,8 @@ puts tree.depth(61)
 
 
 puts tree.balanced?
-
-
+puts "Rebalanced tree:"
+puts tree.rebalance.pretty_print
 
 
 
