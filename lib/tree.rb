@@ -1,14 +1,5 @@
 =begin
 
-
-Write a #depth method which accepts a node and returns its depth. Depth is defined as the number of edges in path from a given node to the tree’s root node.
-
-Write a #balanced? method which checks if the tree is balanced. A balanced tree is one where the difference 
-between heights of left subtree and right subtree of every node is not more than 1.
-
-Write a #rebalance method which rebalances an unbalanced tree. Tip: You’ll want to create a level-order array 
-of the tree before passing the array back into the #build_tree method.
-
 Tie it all together
 Write a simple driver script that does the following:
 
@@ -239,9 +230,7 @@ class Tree
     end
     
     def depth(node, i=0)
-        #find node
-            #node = find(node)
-        #level order at i=0
+    
         unless level_order(i).nil?
             if level_order(i).include?(node)
                 p "depth of #{node} is #{i}"
@@ -250,20 +239,32 @@ class Tree
                 depth(node,i+1)
             end
         end
-        #if includes node.data, return i
+  
+    end
 
-        #else i +=1, level order at i
-        
+    #Write a #balanced? method which checks if the tree is balanced. A balanced tree is one where the difference 
+    #between heights of left subtree and right subtree of every node is not more than 1.
+    def balanced?(node=root)
+       return true if node.nil?
+        left_node_height = height(node.left)
+        right_node_height = height(node.right)
 
+        return true if (left_node_height - right_node_height).abs <=1 && balanced?(node.left) && balanced?(node.right)
 
+        false
     end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
         puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
         pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
-      end
+    end
 
+    def rebalance
+        #Write a #rebalance method which rebalances an unbalanced tree. Tip: You’ll want to create a level-order array 
+        #of the tree before passing the array back into the #build_tree method.
+        
+    end
 end
 
 array= Array.new(25) { rand(1...100) }
@@ -311,6 +312,9 @@ puts tree.depth(13)
 
 
 puts tree.depth(61)
+
+
+puts tree.balanced?
 
 
 
