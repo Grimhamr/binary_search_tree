@@ -1,9 +1,7 @@
 =begin
 
 
-Write a #level_order method that returns an array of values. This method should traverse the tree in breadth-first level order. 
-This method can be implemented using either iteration or recursion (try implementing both!). Tip: You will want to use an array acting 
-as a queue to keep track of all the child nodes that you have yet to traverse and to add new ones to the list (as you saw in the video).
+
 
 Write #inorder, #preorder, and #postorder methods that returns an array of values. Each method should traverse the tree 
 in their respective depth-first order.
@@ -67,10 +65,6 @@ class Tree
   
         root_node
     end
-
-    #Write an #insert and #delete method which accepts a value to insert/delete (you’ll have to deal with several cases for delete 
-    #   such as when a node has children or not). If you need additional resources, check out these two articles on inserting and deleting, 
-    #or this video with several visual examples.
 
     def find(data, node = root)
         return if node.nil?
@@ -161,7 +155,28 @@ class Tree
         end
     end
 
+    #Write a #level_order method that returns an array of values. This method should traverse the tree in breadth-first level order. 
+    #This method can be implemented using either iteration or recursion (try implementing both!). Tip: You will want to use an array acting 
+    #as a queue to keep track of all the child nodes that you have yet to traverse and to add new ones to the list (as you saw in the video).
+    def level_order(order, node = root,  i = 0)
+        #create hash with arrays of the  levels in it
+        @levels_hash ||= Hash.new
+        #create array of level if it doesn't exist
+        @levels_hash[i] ||= []
 
+        #add root.data to array
+        unless node.nil?
+            unless node.data.nil?
+                @levels_hash[i].push(node.data)
+                #increase counter
+                i = i + 1
+                level_order(order,node.left,i)
+                level_order(order,node.right,i)
+            end
+        end
+
+        return @levels_hash[order]
+    end
 
     def pretty_print(node = @root, prefix = '', is_left = true)
         pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
@@ -193,6 +208,8 @@ tree.pretty_print
 p tree.find(13)
 
 p tree.find(24)
+puts "level order"
+puts tree.level_order(3)
 
 
 
