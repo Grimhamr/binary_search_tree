@@ -238,10 +238,21 @@ class Tree
         [height(node.left), height(node.right)].max + 1
     end
     
-    def depth(node)
+    def depth(node, i=0)
         #find node
-            node = find(node)
-        #
+            #node = find(node)
+        #level order at i=0
+        unless level_order(i).nil?
+            if level_order(i).include?(node)
+                p "depth of #{node} is #{i}"
+                return i
+            else
+                depth(node,i+1)
+            end
+        end
+        #if includes node.data, return i
+
+        #else i +=1, level order at i
         
 
 
@@ -292,15 +303,6 @@ p tree.postorder
 
 puts tree.height(13)
 
-puts tree.height(50)
-
-puts tree.height(24)
-
-
-puts tree.height(27)
-
-
-puts tree.height(31)
 
 
 puts tree.height(65)
@@ -308,7 +310,7 @@ puts tree.height(65)
 puts tree.depth(13)
 
 
-
+puts tree.depth(61)
 
 
 
