@@ -94,10 +94,8 @@ class Tree
                 puts "checking left at #{node.data}"
                     if !(node.left.data.nil?)  
                             puts "left is #{node.left.data}" 
-                            #puts "comparing #{node.left.data} with #{@found_instance.data}"
                             if node.left.data == @found_instance.data 
-                               puts "LOCATED!!!!@!@!@!@!@!@!@!deleting: #{node.left.data}"
-                               node.left=nil
+                               node.left = nil
                             end
                     end
             end
