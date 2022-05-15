@@ -33,10 +33,8 @@ class Tree
     def find(data, node = root)
         return if node.nil?
         if node.data == data
-            #puts "#{data} instance located. insertion invalid, deletion valid"
             @insertion_valid = false
             @found_instance = node
-           
         else 
             find(data, node.left)
             find(data, node.right)
@@ -122,21 +120,16 @@ class Tree
     #as a queue to keep track of all the child nodes that you have yet to traverse and to add new ones to the list (as you saw in the video).
     def level_order(order)
         level = level_order_find(order)
-        #reset hash
         @levels_hash = nil
         return level
     end
     def level_order_find(order, node = root,  i = 0)
-        #create hash with arrays of the  levels in it
         @levels_hash ||= Hash.new
-        #create array of level if it doesn't exist
         @levels_hash[i] ||= []
 
-        #add root.data to array
         unless node.nil?
             unless node.data.nil?
                 @levels_hash[i].push(node.data)
-                #increase counter
                 i = i + 1
                 level_order_find(order,node.left,i)
                 level_order_find(order,node.right,i)
